@@ -9,11 +9,17 @@ package nz.ac.auckland.se281.datastructures;
  */
 public class Edge<T> {
   private T destination;
+  private T source;
 
   public Edge(T source, T destination) {
     this.destination = destination;
+    this.source=source;
   }
   public T returnDestination() {
-    return destination;
+    return this.destination;
   }
+  public T returnSource() {
+    return this.source;
+  }
+
 }

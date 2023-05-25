@@ -3,6 +3,10 @@ package nz.ac.auckland.se281.datastructures;
 import java.util.List;
 import java.util.Set;
 
+import javax.print.attribute.standard.Destination;
+
+
+
 /**
  * A graph that is composed of a set of verticies and edges.
  *
@@ -11,11 +15,29 @@ import java.util.Set;
  * @param <T> The type of each vertex, that have a total ordering.
  */
 public class Graph<T extends Comparable<T>> {
-  public Graph(Set<T> verticies, Set<Edge<T>> edges) {}
-
+  private Set<T> verticies;
+  private Set<Edge<T>> edges;
+  public Graph(Set<T> verticies, Set<Edge<T>> edges) {
+    this.verticies=verticies;
+    this.edges=edges;
+  }
+  
   public Set<T> getRoots() {
     // TODO: Task 1.
-    throw new UnsupportedOperationException();
+   
+    
+    for (Edge<T> edge : edges) {
+      //System.out.println(edges);
+      //System.out.println(edge);#
+     // System.out.println(edge);
+      //System.out.println(edge.getClass());
+      
+    }
+    for(int i=0; i<edges.size()-4;i++) {
+      
+      System.out.println(((Edge<T>) edges).returnDestination());
+    }
+    return null;
   }
 
   public boolean isReflexive() {

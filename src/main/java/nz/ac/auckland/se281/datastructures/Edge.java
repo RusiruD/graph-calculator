@@ -8,5 +8,12 @@ package nz.ac.auckland.se281.datastructures;
  * @param <T> The type of each vertex.
  */
 public class Edge<T> {
-  public Edge(T source, T destination) {}
+  private T destination;
+
+  public Edge(T source, T destination) {
+    this.destination = destination;
+  }
+  public T returnDestination() {
+    return destination;
+  }
 }

@@ -292,11 +292,62 @@ y++;
     
    
    }
-    
-        
+   public List<T> nb( T vertex, List<T> visited) {
+    ArrayList t = new ArrayList<>();
+  for (Edge<T> edge : edges) {
+    if (edge.returnSource().equals(vertex)&&!visited.contains(edge.returnDestination())) {
+      System.out.println(edge.returnDestination());
+     t.add(edge.returnDestination());
+  
+     
+  }}
+   Collections.sort(t);
+    return t;}
+   
 
-  public List<T> recursiveBreadthFirstSearch() {
-    throw new UnsupportedOperationException();
+   public List<T> rbfs(Queue<T> queue, List<T> visited) {
+    if (queue.isEmpty()) {
+      return visited;
+  }
+ 
+  T vertex = queue.poll();
+ // System.out.println(vertex);
+  
+ if(!visited.contains(vertex)){
+  visited.add(vertex);
+ 
+  List<T> neighbors = new ArrayList<>();
+  System.out.println(vertex);
+  neighbors.addAll(nb(vertex, visited));
+  //Collections.sort(neighbors);
+  queue.addAll(neighbors);
+
+  rbfs(queue, visited);
+  return visited;}
+  return visited;
+}
+
+
+   public List<T> recursiveBreadthFirstSearch() {
+    List<T> visited = new ArrayList<>();
+        Queue<T> queue = new LinkedList<>();
+    Set<T> f = getRoots();
+    int o=getRoots().size();
+        //for (T vertex : verticies) {
+         
+           // if (!visited.contains(vertex)) {
+              for(int i=0; i<o;i++){
+                
+                queue.add(f.iterator().next());
+               f.remove(f.iterator().next());
+                
+                rbfs(queue, visited);
+              }
+            //}
+       // }
+
+        return visited;
+
 
   }
   public List<T>rdfs(T vertex, List<T> visited) {

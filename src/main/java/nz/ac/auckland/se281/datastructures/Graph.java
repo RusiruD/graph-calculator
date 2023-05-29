@@ -3,7 +3,9 @@ package nz.ac.auckland.se281.datastructures;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
@@ -23,10 +25,12 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 public class Graph<T extends Comparable<T>> {
   private Set<T> verticies;
   private Set<Edge<T>> edges;
+    
   public Graph(Set<T> verticies, Set<Edge<T>> edges) {
     this.verticies=verticies;
     this.edges=edges;
   }
+  
   public int getInDegree(T vertex) {
     int InDegree=0;
     
@@ -214,7 +218,7 @@ y++;
   public List<T>getChildren(T vertex){
     List<T> x=new ArrayList<>();
     for(Edge<T> edge :edges){
-      if(edge.returnSource().equals(vertex) ){
+      if(edge.returnSource().equals(vertex) && !edge.returnDestination().equals(vertex) ){
         
         x.add(edge.returnDestination());
       }
@@ -292,13 +296,53 @@ y++;
         
 
   public List<T> recursiveBreadthFirstSearch() {
-    // TODO: Task 3.
     throw new UnsupportedOperationException();
-  }
 
-  public List<T> recursiveDepthFirstSearch() {
-    
-    // TODO: Task 3.
-    throw new UnsupportedOperationException();
   }
-}
+  public List<T>rdfs(T vertex, List<T> visited) {
+   
+   
+     
+    if(getChildren(vertex).isEmpty()){
+      if(!visited.contains(vertex)){
+        System.out.println("dd");
+      visited.add(vertex);}
+      return visited;
+    }
+    else{
+      if(!visited.contains(vertex)){
+      visited.add(vertex);
+      System.out.println("x");
+      System.out.println(vertex);
+      for(T y:getChildren(vertex)){
+        
+        rdfs(y,visited);
+        
+      }
+      
+    }
+    return visited;}
+    
+  }
+  
+  public List<T> recursiveDepthFirstSearch() {
+    Set<T> z = getRoots();
+    List<T> visited = new ArrayList<>();
+   int l=z.size();
+
+    for(int i=0; i<l;i++){
+      System.out.println(z.iterator().next());
+    visited=(rdfs(z.iterator().next(),visited));
+    z.remove(z.iterator().next());
+  }
+    return visited;
+    
+    //return visited;
+    
+    
+  }}
+       
+    
+    
+  
+

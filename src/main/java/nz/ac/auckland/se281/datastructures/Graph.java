@@ -1,10 +1,15 @@
 package nz.ac.auckland.se281.datastructures;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 import javax.print.attribute.standard.Destination;
+
+import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 
 
 
@@ -34,22 +39,38 @@ public class Graph<T extends Comparable<T>> {
 
   public Set<T> getRoots() {
     // TODO: Task 1.
-   
+int z=0; 
      Set<T> x=new HashSet<>();
     
     
         for(T verticie :verticies){
           int y=0;
            y=getInDegree(verticie);
-
+         
             
           
           if(y==0){
+            
+            z++;
             x.add(verticie);
           }
 
         }
-      
+         
+
+          
+        
+          
+        
+      if(z==0){
+        x= getEquivalenceClass(verticies.iterator().next());
+        for (T verticie :verticies){
+          Set<T> r = getEquivalenceClass(verticie);
+          if(r.iterator().next()!=x.iterator().next()){
+            x.add(r.iterator().next());
+          }
+        }
+      }
        
 
 
@@ -80,12 +101,7 @@ public class Graph<T extends Comparable<T>> {
       
       for (Edge<T> edge1 :edges){
         if( edge.returnDestination().equals(edge1.returnSource())&&edge.returnSource().equals(edge1.returnDestination())){
-         /* System.out.println(edge.returnSource());
-          System.out.println(edge.returnDestination());
-          System.out.println("x");
-          System.out.println(edge1.returnSource());
-          System.out.println(edge1.returnDestination());
-          System.out.println("z");*/
+         
           x++;
         }
 
@@ -195,16 +211,85 @@ y++;
     // TODO: Task 1.
     
   }
-
+  public List<T>getChildren(T vertex){
+    List<T> x=new ArrayList<>();
+    for(Edge<T> edge :edges){
+      if(edge.returnSource().equals(vertex) ){
+        
+        x.add(edge.returnDestination());
+      }
+    }
+    Collections.sort(x);
+  
+    return x;
+  }
   public List<T> iterativeBreadthFirstSearch() {
-    // TODO: Task 2.
-    throw new UnsupportedOperationException();
+    //implementing BFS using queue
+    List<T> visited = new ArrayList<>();
+    List<T> queue = new ArrayList<>();
+    Set<T> z = getRoots();
+    for(int i=0; i<getRoots().size();i++){
+    queue.add(z.iterator().next());
+    z.remove(z.iterator().next());
+    
+    
+   
+    while(!queue.isEmpty()){
+      
+      T d=queue.remove(0);
+      
+      visited.add(d);
+      //System.out.println(visited);
+      List<T> x=getChildren(d);
+      
+      for(T y:x){
+        if(!visited.contains(y)&&!queue.contains(y)){
+          //System.out.println("contains");
+         
+          queue.add(y);
+         
+        }
+      }
+    }}
+   return visited;
   }
 
   public List<T> iterativeDepthFirstSearch() {
-    // TODO: Task 2.
-    throw new UnsupportedOperationException();
-  }
+    //implementing iterative DFS using stack
+    List<T> visited = new ArrayList<>();
+    Stack <T> stack = new Stack<>();
+    Set<T> z = getRoots();
+    
+    for(int i=0; i<getRoots().size();i++){
+    stack.push(z.iterator().next());
+    z.remove(z.iterator().next());
+    while(!stack.isEmpty()){
+     
+      T d=stack.pop();
+      visited.add(d);
+      
+      List<T> x=getChildren(d);
+      Collections.reverse(x); 
+      
+      for(T y:x){
+        if(!visited.contains(y)&&!stack.contains(y)){
+          stack.push(y);
+          
+        }
+      }
+    }}
+
+ 
+    
+    
+  
+   
+    return visited;
+    
+   
+   }
+    
+        
 
   public List<T> recursiveBreadthFirstSearch() {
     // TODO: Task 3.
@@ -212,6 +297,7 @@ y++;
   }
 
   public List<T> recursiveDepthFirstSearch() {
+    
     // TODO: Task 3.
     throw new UnsupportedOperationException();
   }

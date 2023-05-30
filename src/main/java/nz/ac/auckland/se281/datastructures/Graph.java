@@ -34,6 +34,7 @@ public class Graph<T extends Comparable<T>> {
   public int getInDegree(T vertex) {
     int InDegree=0;
     
+    //calculates indegree by counting the number of edges that have the vertex as the destination
     for(Edge<T> edge :edges){
       if(edge.returnDestination().equals(vertex)){InDegree++;
       }
@@ -42,25 +43,24 @@ public class Graph<T extends Comparable<T>> {
   }
 
   public Set<T> getRoots() {
-    // TODO: Task 1.
-int z=0; 
-     Set<T> x=new HashSet<>();
-     Set<T> s=new HashSet<>();
+    
+int counter=0; 
+     Set<T> initialEquivalenceClassSet=new HashSet<>();
+     Set<T> rootsSet=new HashSet<>();
     
     
         for(T verticie :verticies){
-          int y=0;
-           y=getInDegree(verticie);
+          int inDegree=0;
+           inDegree=getInDegree(verticie);
           
          
             
           
-          if(y==0){
-            System.out.println(verticie);
-            System.out.println("x");
+          if(inDegree==0){
+           
             
-            z++;
-            s.add(verticie);
+            counter++;
+            rootsSet.add(verticie);
           }
 
         }
@@ -70,25 +70,25 @@ int z=0;
         
           
         
-       if(z==0){
+       if(counter==0){
 
-        x= getEquivalenceClass(verticies.iterator().next());
-       if(!x.isEmpty()){
-        T d = x.iterator().next();
-        s.add(d);
-        System.out.println(d);
+        initialEquivalenceClassSet= getEquivalenceClass(verticies.iterator().next());
+       if(!initialEquivalenceClassSet.isEmpty()){
+        T firstValueT = initialEquivalenceClassSet.iterator().next();
+        rootsSet.add(firstValueT);
+        
        }
        
         
         
  
-        if(!x.isEmpty()){
+        if(!initialEquivalenceClassSet.isEmpty()){
         for (T verticie :verticies){
-          Set<T> r = getEquivalenceClass(verticie);
-          System.out.println(r);
-          if(r.iterator().next()!=s.iterator().next()){
-            s.add(r.iterator().next());
-            System.out.println(r.iterator().next());
+          Set<T> equivalenceClassSet = getEquivalenceClass(verticie);
+        
+          if(equivalenceClassSet.iterator().next()!=rootsSet.iterator().next()){
+            rootsSet.add(equivalenceClassSet.iterator().next());
+            
           }
         }
       }}
@@ -97,7 +97,7 @@ int z=0;
 
         
       
-        return s;
+        return rootsSet;
       }
      
       
@@ -106,30 +106,30 @@ int z=0;
    
 
   public boolean isReflexive() {
-    int x=0;
+    int reflexiveEdgeCounter=0;
     for(Edge<T> edge :edges){
       if(edge.returnDestination().equals(edge.returnSource())){
-        x++;
+        reflexiveEdgeCounter++;
     }}
-    if(x==verticies.size()){return true;}
+    if(reflexiveEdgeCounter==verticies.size()){return true;}
     else{return false;}
   }
 
   public boolean isSymmetric() {
-    // TODO: Task 1.
-    int x=0;
+    
+    int symmetricEdgeCounter=0;
     for(Edge<T> edge :edges){
       
       for (Edge<T> edge1 :edges){
         if( edge.returnDestination().equals(edge1.returnSource())&&edge.returnSource().equals(edge1.returnDestination())){
          
-          x++;
+          symmetricEdgeCounter++;
         }
 
       }}
 
       
-      if(x==edges.size()){
+      if(symmetricEdgeCounter==edges.size()){
         return true;
     }
   else{return false;}
@@ -139,19 +139,19 @@ int z=0;
   }
 
   public boolean isTransitive() {
-    int x =0;
-    int y=0;
+    int possibleTransitiveEdgeCounter =0;
+    int transitiveEdgeCounter=0;
     for(Edge<T> edge :edges){
       for (Edge<T> edge1 :edges){
        
         if(edge.returnDestination().equals(edge1.returnSource())&&!edge1.returnDestination().equals(edge1.returnSource())){
-          x++;
+          possibleTransitiveEdgeCounter++;
         
           
             
             
             for(Edge<T> edge3:edges){
-              if(edge.returnSource().equals(edge3.returnSource())&&edge1.returnDestination().equals(edge3.returnDestination())){y++;}
+              if(edge.returnSource().equals(edge3.returnSource())&&edge1.returnDestination().equals(edge3.returnDestination())){transitiveEdgeCounter++;}
               else{}
               
             }
@@ -162,7 +162,7 @@ int z=0;
         }
         
       }
-      if(x==y){
+      if(possibleTransitiveEdgeCounter==transitiveEdgeCounter){
         return true;}
         else{
           return false;
@@ -170,16 +170,16 @@ int z=0;
   }
 
   public boolean isAntiSymmetric() {
-    int x=0;
-    int y=0;
+    int antisymmetricEdgeCounter =0;
+    int possibleAntiSymmetricEdgeCounter=0;
     for(Edge<T> edge :edges){
 
       for (Edge<T> edge1 :edges){
        
         if( edge.returnDestination().equals(edge1.returnSource())&&edge.returnSource().equals(edge1.returnDestination())){
-y++;
+possibleAntiSymmetricEdgeCounter++;
           if( edge.equals(edge1)){
-            x++;
+            antisymmetricEdgeCounter++;
 
            
           }
@@ -193,7 +193,7 @@ y++;
       }}
 
         
-      if(y==x){
+      if(possibleAntiSymmetricEdgeCounter==antisymmetricEdgeCounter){
         return true;
     }
   else{
@@ -212,62 +212,65 @@ y++;
     }
   }
 
+
   public Set<T> getEquivalenceClass(T vertex) {
-    Set<T> x=new HashSet<>();
+    Set<T> equivalenceClass=new HashSet<>();
     if (!isEquivalence()) {
-      return x;
+      return equivalenceClass;
     }
     else{
       for(Edge<T> edge :edges){
         if(edge.returnSource().equals(vertex)){
-          x.add(edge.returnDestination());
+          equivalenceClass.add(edge.returnDestination());
         }
         else if(edge.returnDestination().equals(vertex)){
-          x.add(edge.returnSource());
+          equivalenceClass.add(edge.returnSource());
         }
-        else{}
+        
       }
-      return x;
+      return equivalenceClass;
     }
-    // TODO: Task 1.
+   
     
   }
   public List<T>getChildren(T vertex){
-    List<T> x=new ArrayList<>();
+    List<T> childrenList=new ArrayList<>();
     for(Edge<T> edge :edges){
       if(edge.returnSource().equals(vertex) && !edge.returnDestination().equals(vertex) ){
         
-        x.add(edge.returnDestination());
+        childrenList.add(edge.returnDestination());
       }
     }
-    Collections.sort(x);
+    Collections.sort(childrenList);
   
-    return x;
+    return childrenList;
   }
+
+
   public List<T> iterativeBreadthFirstSearch() {
     //implementing BFS using queue
     List<T> visited = new ArrayList<>();
     List<T> queue = new ArrayList<>();
-    Set<T> z = getRoots();
+    Set<T> rootsSet = getRoots();
     for(int i=0; i<getRoots().size();i++){
-    queue.add(z.iterator().next());
-    z.remove(z.iterator().next());
+    queue.add(rootsSet.iterator().next());
+    rootsSet.remove(rootsSet.iterator().next());
     
     
    
     while(!queue.isEmpty()){
       
-      T d=queue.remove(0);
+      T firstQueueValue=queue.remove(0);
       
-      visited.add(d);
-      //System.out.println(visited);
-      List<T> x=getChildren(d);
+      visited.add(firstQueueValue);
       
-      for(T y:x){
-        if(!visited.contains(y)&&!queue.contains(y)){
-          //System.out.println("contains");
+      List<T> childrenList=getChildren(firstQueueValue);
+      
+      for(T childNode:childrenList){
+        if(!visited.contains(childNode)&&!queue.contains(childNode)){
          
-          queue.add(y);
+         
+          queue.add(childNode);
          
         }
       }
@@ -279,22 +282,22 @@ y++;
     //implementing iterative DFS using stack
     List<T> visited = new ArrayList<>();
     Stack <T> stack = new Stack<>();
-    Set<T> z = getRoots();
+    Set<T> rootsSet = getRoots();
     
     for(int i=0; i<getRoots().size();i++){
-    stack.push(z.iterator().next());
-    z.remove(z.iterator().next());
+    stack.push(rootsSet.iterator().next());
+    rootsSet.remove(rootsSet.iterator().next());
     while(!stack.isEmpty()){
      
-      T d=stack.pop();
-      visited.add(d);
+      T topStackValue=stack.pop();
+      visited.add(topStackValue);
       
-      List<T> x=getChildren(d);
-      Collections.reverse(x); 
+      List<T> childrenList=getChildren(topStackValue);
+      Collections.reverse(childrenList); 
       
-      for(T y:x){
-        if(!visited.contains(y)&&!stack.contains(y)){
-          stack.push(y);
+      for(T child:childrenList){
+        if(!visited.contains(child)&&!stack.contains(child)){
+          stack.push(child);
           
         }
       }
@@ -309,17 +312,17 @@ y++;
     
    
    }
-   public List<T> nb( T vertex, List<T> visited) {
-    ArrayList t = new ArrayList<>();
+   public List<T> returnSiblings( T vertex, List<T> visited) {
+    ArrayList siblings = new ArrayList<>();
   for (Edge<T> edge : edges) {
     if (edge.returnSource().equals(vertex)&&!visited.contains(edge.returnDestination())) {
-      System.out.println(edge.returnDestination());
-     t.add(edge.returnDestination());
+     
+     siblings.add(edge.returnDestination());
   
      
   }}
-   Collections.sort(t);
-    return t;}
+   Collections.sort(siblings);
+    return siblings;}
    
 
    public List<T> rbfs(Queue<T> queue, List<T> visited) {
@@ -328,15 +331,14 @@ y++;
   }
  
   T vertex = queue.poll();
- // System.out.println(vertex);
-  
+ 
  if(!visited.contains(vertex)){
   visited.add(vertex);
  
   List<T> neighbors = new ArrayList<>();
   System.out.println(vertex);
-  neighbors.addAll(nb(vertex, visited));
-  //Collections.sort(neighbors);
+  neighbors.addAll(returnSiblings(vertex, visited));
+  
   queue.addAll(neighbors);
 
   rbfs(queue, visited);
@@ -348,20 +350,17 @@ y++;
    public List<T> recursiveBreadthFirstSearch() {
     List<T> visited = new ArrayList<>();
         Queue<T> queue = new LinkedList<>();
-    Set<T> f = getRoots();
-    int o=getRoots().size();
-        //for (T vertex : verticies) {
-         
-           // if (!visited.contains(vertex)) {
-              for(int i=0; i<o;i++){
+    Set<T> roots = getRoots();
+    int rootAmount=getRoots().size();
+        
+              for(int i=0; i<rootAmount;i++){
                 
-                queue.add(f.iterator().next());
-               f.remove(f.iterator().next());
+                queue.add(roots.iterator().next());
+               roots.remove(roots.iterator().next());
                 
                 rbfs(queue, visited);
               }
-            //}
-       // }
+       
 
         return visited;
 
@@ -373,18 +372,17 @@ y++;
      
     if(getChildren(vertex).isEmpty()){
       if(!visited.contains(vertex)){
-        System.out.println("dd");
+        
       visited.add(vertex);}
       return visited;
     }
     else{
       if(!visited.contains(vertex)){
       visited.add(vertex);
-      System.out.println("x");
-      System.out.println(vertex);
-      for(T y:getChildren(vertex)){
+      
+      for(T child:getChildren(vertex)){
         
-        rdfs(y,visited);
+        rdfs(child,visited);
         
       }
       
@@ -394,18 +392,18 @@ y++;
   }
   
   public List<T> recursiveDepthFirstSearch() {
-    Set<T> z = getRoots();
+    Set<T> roots = getRoots();
     List<T> visited = new ArrayList<>();
-   int l=z.size();
+   int l=roots.size();
 
     for(int i=0; i<l;i++){
-      System.out.println(z.iterator().next());
-    visited=(rdfs(z.iterator().next(),visited));
-    z.remove(z.iterator().next());
+      
+    visited=(rdfs(roots.iterator().next(),visited));
+    roots.remove(roots.iterator().next());
   }
     return visited;
     
-    //return visited;
+   
     
     
   }}

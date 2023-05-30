@@ -45,42 +45,59 @@ public class Graph<T extends Comparable<T>> {
     // TODO: Task 1.
 int z=0; 
      Set<T> x=new HashSet<>();
+     Set<T> s=new HashSet<>();
     
     
         for(T verticie :verticies){
           int y=0;
            y=getInDegree(verticie);
+          
          
             
           
           if(y==0){
+            System.out.println(verticie);
+            System.out.println("x");
             
             z++;
-            x.add(verticie);
+            s.add(verticie);
           }
 
         }
          
+        
+          
+        
+          
+        
+       if(z==0){
 
-          
-        
-          
-        
-      if(z==0){
         x= getEquivalenceClass(verticies.iterator().next());
+       if(!x.isEmpty()){
+        T d = x.iterator().next();
+        s.add(d);
+        System.out.println(d);
+       }
+       
+        
+        
+ 
+        if(!x.isEmpty()){
         for (T verticie :verticies){
           Set<T> r = getEquivalenceClass(verticie);
-          if(r.iterator().next()!=x.iterator().next()){
-            x.add(r.iterator().next());
+          System.out.println(r);
+          if(r.iterator().next()!=s.iterator().next()){
+            s.add(r.iterator().next());
+            System.out.println(r.iterator().next());
           }
         }
-      }
+      }}
        
 
 
         
       
-        return x;
+        return s;
       }
      
       

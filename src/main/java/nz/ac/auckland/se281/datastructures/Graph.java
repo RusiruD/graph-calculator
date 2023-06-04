@@ -21,7 +21,6 @@ public class Graph<T extends Comparable<T>> {
   /**
    * Constructs a Graph with the given set of vertices and edges.
    *
-   * @param vertices The set of vertices in the graph.
    * @param edges The set of edges in the graph.
    */
   public Graph(Set<T> verticies, Set<Edge<T>> edges) {
@@ -463,6 +462,7 @@ public class Graph<T extends Comparable<T>> {
         }
       }
     }
+
     // If all the siblings have been visited, add all the children of the visited vertices to the
     // queue
     else if (visited.containsAll(siblings)) {
@@ -475,6 +475,7 @@ public class Graph<T extends Comparable<T>> {
         }
       }
     }
+
     // Otherwise, add all the siblings to the queue
     else {
       for (T sibling : siblings) {
@@ -524,6 +525,7 @@ public class Graph<T extends Comparable<T>> {
       }
       return visited;
     }
+
     // Otherwise, add the vertex to the visited list and recursively call rdfs on its children
     else {
       if (!visited.contains(vertex)) {

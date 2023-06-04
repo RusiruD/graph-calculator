@@ -23,7 +23,9 @@ public class LinkedListClass<T> implements ListInterface<T> {
    * @param data The value of the node to be added.
    */
   public void push(T data) {
+    // Create a new node with the specified data
     Node<T> newNode = new Node<>(data);
+    // Set the next node of the new node to be the current head
     if (head == null) {
       head = newNode;
     } else {
@@ -119,9 +121,12 @@ public class LinkedListClass<T> implements ListInterface<T> {
    * @throws IllegalStateException if the list is empty.
    */
   public T pollFirst() {
+    // if the queue is empty a exception is thrown
     if (isEmpty()) {
       throw new IllegalStateException("List is empty");
     }
+    // the head is set to the next element
+    // and the original head is returned
     T data = head.getValue();
     head = head.getNext();
     size--;
@@ -199,15 +204,18 @@ public class LinkedListClass<T> implements ListInterface<T> {
    * @throws IllegalStateException if the list is empty.
    */
   public T pop() {
+    // if the queue is empty a exception is thrown
     if (isEmpty()) {
       throw new IllegalStateException("List is empty");
     }
+    // if the queue has only one element, the head is set to null
     if (size == 1) {
       T data = head.getValue();
       head = null;
       size = 0;
       return data;
     }
+    // if the queue has more than one element, the last element is removed
     Node<T> current = head;
     while (current.getNext().getNext() != null) {
       current = current.getNext();
@@ -220,8 +228,10 @@ public class LinkedListClass<T> implements ListInterface<T> {
 
   @Override
   public String toString() {
+    // if the queue is empty, a empty string is returned
     StringBuilder sb = new StringBuilder();
     Node<T> current = head;
+    // the elements are appended to the string while the current node is not null
     while (current != null) {
       sb.append(current.getValue()).append(" ");
       current = current.getNext();
@@ -231,7 +241,9 @@ public class LinkedListClass<T> implements ListInterface<T> {
 
   @Override
   public void prepend(T item) {
+
     Node<T> newNode = new Node<>(item);
+    // if the queue is empty, the new node is set as head
     if (head == null) {
       head = newNode;
     } else {

@@ -1,7 +1,9 @@
 package nz.ac.auckland.se281.datastructures;
 
+/** This package provides data structures for various purposes. */
+
 /**
- * An edge in a graph that connects two verticies.
+ * An edge in a graph that connects two vertices.
  *
  * <p>You must NOT change the signature of the constructor of this class.
  *
@@ -11,6 +13,12 @@ public class Edge<T> implements Comparable<Edge<T>> {
   private T destination;
   private T source;
 
+  /**
+   * Constructs an edge between two vertices.
+   *
+   * @param source The source vertex.
+   * @param destination The destination vertex.
+   */
   public Edge(T source, T destination) {
     this.destination = destination;
     this.source = source;
@@ -28,10 +36,20 @@ public class Edge<T> implements Comparable<Edge<T>> {
     return Integer.compare(destination.hashCode(), other.destination.hashCode());
   }
 
+  /**
+   * Returns the destination vertex of the edge.
+   *
+   * @return The destination vertex.
+   */
   public T returnDestination() {
     return this.destination;
   }
 
+  /**
+   * Returns the source vertex of the edge.
+   *
+   * @return The source vertex.
+   */
   public T returnSource() {
     return this.source;
   }

@@ -18,11 +18,23 @@ public class Graph<T extends Comparable<T>> {
   private Set<T> verticies;
   private Set<Edge<T>> edges;
 
+  /**
+   * Constructs a Graph with the given set of vertices and edges.
+   *
+   * @param vertices The set of vertices in the graph.
+   * @param edges The set of edges in the graph.
+   */
   public Graph(Set<T> verticies, Set<Edge<T>> edges) {
     this.verticies = verticies;
     this.edges = edges;
   }
 
+  /**
+   * Returns the in-degree of a given vertex.
+   *
+   * @param vertex The vertex to get the in-degree for.
+   * @return The in-degree of the given vertex.
+   */
   public int getInDegree(T vertex) {
     int InDegree = 0;
 
@@ -35,6 +47,11 @@ public class Graph<T extends Comparable<T>> {
     return InDegree;
   }
 
+  /**
+   * Returns the set of roots in the graph.
+   *
+   * @return The set of roots in the graph.
+   */
   public Set<T> getRoots() {
 
     int counter = 0;
@@ -82,6 +99,11 @@ public class Graph<T extends Comparable<T>> {
     return orderedSet;
   }
 
+  /**
+   * Checks whether the graph is reflexive.
+   *
+   * @return true if the graph is reflexive, false otherwise.
+   */
   public boolean isReflexive() {
     int reflexiveEdgeCounter = 0;
     for (Edge<T> edge : edges) {
@@ -96,6 +118,11 @@ public class Graph<T extends Comparable<T>> {
     }
   }
 
+  /**
+   * Checks whether the graph is symmetric.
+   *
+   * @return true if the graph is symmetric, false otherwise.
+   */
   public boolean isSymmetric() {
 
     int symmetricEdgeCounter = 0;
@@ -117,6 +144,11 @@ public class Graph<T extends Comparable<T>> {
     }
   }
 
+  /**
+   * Checks whether the graph is transitive.
+   *
+   * @return true if the graph is transitive, false otherwise.
+   */
   public boolean isTransitive() {
     int possibleTransitiveEdgeCounter = 0;
     int transitiveEdgeCounter = 0;
@@ -144,6 +176,11 @@ public class Graph<T extends Comparable<T>> {
     }
   }
 
+  /**
+   * Checks whether the graph is anti-symmetric.
+   *
+   * @return true if the graph is anti-symmetric, false otherwise.
+   */
   public boolean isAntiSymmetric() {
     int antisymmetricEdgeCounter = 0;
     int possibleAntiSymmetricEdgeCounter = 0;
@@ -174,6 +211,11 @@ public class Graph<T extends Comparable<T>> {
     }
   }
 
+  /**
+   * Checks whether the graph is an equivalence relation.
+   *
+   * @return true if the graph is an equivalence relation, false otherwise.
+   */
   public boolean isEquivalence() {
     if (isReflexive() && isSymmetric() && isTransitive()) {
       return true;
@@ -182,6 +224,12 @@ public class Graph<T extends Comparable<T>> {
     }
   }
 
+  /**
+   * Returns the equivalence class for a given vertex.
+   *
+   * @param vertex The vertex to get the equivalence class for.
+   * @return The equivalence class for the given vertex.
+   */
   public Set<T> getEquivalenceClass(T vertex) {
     Set<T> equivalenceClass = new HashSet<>();
     if (!isEquivalence()) {
@@ -198,6 +246,12 @@ public class Graph<T extends Comparable<T>> {
     }
   }
 
+  /**
+   * Returns the list of children for a given vertex.
+   *
+   * @param vertex The vertex to get the children for.
+   * @return The list of children for the given vertex.
+   */
   public List<T> getChildren(T vertex) {
     List<T> childrenList = new ArrayList<>();
     List<T> x = new ArrayList<T>();
@@ -213,6 +267,11 @@ public class Graph<T extends Comparable<T>> {
     return x;
   }
 
+  /**
+   * Performs iterative Breadth-First Search (BFS) on the graph.
+   *
+   * @return The list of vertices visited during BFS.
+   */
   public List<T> iterativeBreadthFirstSearch() {
     // implementing BFS using queue
     List<T> visited = new ArrayList<>();
@@ -241,6 +300,11 @@ public class Graph<T extends Comparable<T>> {
     return visited;
   }
 
+  /**
+   * Performs iterative Depth-First Search (DFS) on the graph.
+   *
+   * @return The list of vertices visited during DFS.
+   */
   public List<T> iterativeDepthFirstSearch() {
     // implementing iterative DFS using stack
     List<T> visited = new ArrayList<>();
@@ -251,7 +315,6 @@ public class Graph<T extends Comparable<T>> {
       stack.push(rootsSet.iterator().next());
       rootsSet.remove(rootsSet.iterator().next());
       while (!stack.isEmpty()) {
-
         T topStackValue = stack.pop();
         visited.add(topStackValue);
 
@@ -279,15 +342,21 @@ public class Graph<T extends Comparable<T>> {
     return visited;
   }
 
+  /**
+   * Returns the siblings of a given vertex.
+   *
+   * @param vertex The vertex to get the siblings for.
+   * @param visited The list of visited vertices.
+   * @return The list of siblings for the given vertex.
+   */
   public List<T> returnSiblings(T vertex, List<T> visited) {
-
     List<T> siblings = new ArrayList<>();
 
     // Find the source vertex of the input vertex
     List<T> sourceVertices = new ArrayList<>();
     T sourceVertex = null;
-    // Find the source vertices of the input vertex
 
+    // Find the source vertices of the input vertex
     for (Edge<T> edge : edges) {
       if (edge.returnDestination().equals(vertex)) {
         sourceVertices.add(edge.returnSource());
@@ -295,7 +364,6 @@ public class Graph<T extends Comparable<T>> {
     }
 
     if (!sourceVertices.isEmpty()) {
-
       sourceVertex = sourceVertices.get(0);
     }
 
@@ -307,13 +375,12 @@ public class Graph<T extends Comparable<T>> {
             .thenComparing((Edge<T> edge) -> edge.returnDestination());
     Comparator<Edge<T>> oppositeEdgeComparator = edgeComparator.reversed();
     sortedEdges.sort(oppositeEdgeComparator);
+
     if (sourceVertex != null) {
       for (Edge<T> edge : sortedEdges) {
-        //  System.out.println(edge.returnSource() + " " + edge.returnDestination());
         if (edge.returnSource().equals(sourceVertex)
             && edge.returnDestination() != vertex
             && !siblings.contains(edge.returnDestination())) {
-          // System.out.println("source vertex" + sourceVertex);
           siblings.add(edge.returnDestination());
         }
       }
@@ -322,6 +389,13 @@ public class Graph<T extends Comparable<T>> {
     return siblings;
   }
 
+  /**
+   * Recursive Best-First Search (RBFS) helper function.
+   *
+   * @param queue The queue of vertices.
+   * @param visited The list of visited vertices.
+   * @return The list of visited vertices during RBFS.
+   */
   public List<T> rbfs(Queue<T> queue, List<T> visited) {
     if (queue.isEmpty()) {
       return visited;
@@ -332,8 +406,6 @@ public class Graph<T extends Comparable<T>> {
 
     List<T> siblings = returnSiblings(vertex, visited);
 
-    // System.out.println(visited);
-    // System.out.println(vertex + " " + siblings);
     if (siblings.isEmpty()) {
       for (T visitedVertex : visited) {
         List<T> children = getChildren(visitedVertex);
@@ -363,6 +435,11 @@ public class Graph<T extends Comparable<T>> {
     return rbfs(queue, visited);
   }
 
+  /**
+   * Performs recursive Breadth-First Search (BFS) on the graph.
+   *
+   * @return The list of vertices visited during BFS.
+   */
   public List<T> recursiveBreadthFirstSearch() {
     List<T> visited = new ArrayList<>();
     Queue<T> queue = new Queue<T>();
@@ -370,7 +447,6 @@ public class Graph<T extends Comparable<T>> {
     int rootAmount = getRoots().size();
 
     for (int i = 0; i < rootAmount; i++) {
-
       queue.add(roots.iterator().next());
       roots.remove(roots.iterator().next());
 
@@ -380,11 +456,16 @@ public class Graph<T extends Comparable<T>> {
     return visited;
   }
 
+  /**
+   * Recursive Depth-First Search (RDFS) helper function.
+   *
+   * @param vertex The vertex to start the search from.
+   * @param visited The list of visited vertices.
+   * @return The list of visited vertices during RDFS.
+   */
   public List<T> rdfs(T vertex, List<T> visited) {
-
     if (getChildren(vertex).isEmpty()) {
       if (!visited.contains(vertex)) {
-
         visited.add(vertex);
       }
       return visited;
@@ -393,7 +474,6 @@ public class Graph<T extends Comparable<T>> {
         visited.add(vertex);
 
         for (T child : getChildren(vertex)) {
-
           rdfs(child, visited);
         }
       }
@@ -401,14 +481,18 @@ public class Graph<T extends Comparable<T>> {
     }
   }
 
+  /**
+   * Performs recursive Depth-First Search (DFS) on the graph.
+   *
+   * @return The list of vertices visited during DFS.
+   */
   public List<T> recursiveDepthFirstSearch() {
     Set<T> roots = getRoots();
     List<T> visited = new ArrayList<>();
     int l = roots.size();
 
     for (int i = 0; i < l; i++) {
-
-      visited = (rdfs(roots.iterator().next(), visited));
+      visited = rdfs(roots.iterator().next(), visited);
       roots.remove(roots.iterator().next());
     }
     return visited;

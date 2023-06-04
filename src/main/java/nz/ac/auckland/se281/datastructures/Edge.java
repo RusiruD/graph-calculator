@@ -1,9 +1,9 @@
 package nz.ac.auckland.se281.datastructures;
 
-/** This package provides data structures for various purposes. */
-
 /**
  * An edge in a graph that connects two vertices.
+ *
+ * <p>This package provides data structures for various purposes.
  *
  * <p>You must NOT change the signature of the constructor of this class.
  *
@@ -24,18 +24,6 @@ public class Edge<T> implements Comparable<Edge<T>> {
     this.source = source;
   }
 
-  @Override
-  public int compareTo(Edge<T> other) {
-    // Compare source numbers
-    int sourceComparison = Integer.compare(source.hashCode(), other.source.hashCode());
-    if (sourceComparison != 0) {
-      return sourceComparison;
-    }
-
-    // Source numbers are the same, compare destination numbers
-    return Integer.compare(destination.hashCode(), other.destination.hashCode());
-  }
-
   /**
    * Returns the destination vertex of the edge.
    *
@@ -52,6 +40,18 @@ public class Edge<T> implements Comparable<Edge<T>> {
    */
   public T returnSource() {
     return this.source;
+  }
+
+  @Override
+  public int compareTo(Edge<T> other) {
+    // Compare source numbers
+    int sourceComparison = Integer.compare(source.hashCode(), other.source.hashCode());
+    if (sourceComparison != 0) {
+      return sourceComparison;
+    }
+
+    // Source numbers are the same, compare destination numbers
+    return Integer.compare(destination.hashCode(), other.destination.hashCode());
   }
 
   @Override

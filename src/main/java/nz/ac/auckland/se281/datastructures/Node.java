@@ -1,7 +1,5 @@
 package nz.ac.auckland.se281.datastructures;
 
-/** This package provides data structures for various purposes. */
-
 /**
  * A node in a linked list.
  *

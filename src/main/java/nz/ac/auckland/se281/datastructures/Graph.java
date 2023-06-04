@@ -55,7 +55,6 @@ public class Graph<T extends Comparable<T>> {
   public Set<T> getRoots() {
 
     int counter = 0;
-    Set<T> initialEquivalenceClassSet = new HashSet<>();
 
     List<T> x = new ArrayList<T>(verticies);
     Set<T> orderedSet = new LinkedHashSet<>();
@@ -65,8 +64,8 @@ public class Graph<T extends Comparable<T>> {
 
     for (T verticie : x) {
       // System.out.println(verticie);
-      int inDegree = 0;
-      inDegree = getInDegree(verticie);
+
+      int inDegree = getInDegree(verticie);
 
       if (inDegree == 0) {
 
@@ -78,7 +77,7 @@ public class Graph<T extends Comparable<T>> {
 
     if (counter == 0) {
 
-      initialEquivalenceClassSet = getEquivalenceClass(verticies.iterator().next());
+      Set<T> initialEquivalenceClassSet = getEquivalenceClass(verticies.iterator().next());
       if (!initialEquivalenceClassSet.isEmpty()) {
         T firstValueT = initialEquivalenceClassSet.iterator().next();
         orderedSet.add(firstValueT);
@@ -192,9 +191,6 @@ public class Graph<T extends Comparable<T>> {
           if (edge.equals(edge1)) {
             antisymmetricEdgeCounter++;
           }
-
-          if (!edge.returnDestination().equals(edge1.returnSource())
-              && edge.returnSource().equals(edge1.returnDestination())) {}
         }
       }
     }
@@ -249,7 +245,7 @@ public class Graph<T extends Comparable<T>> {
    * @return The list of children for the given vertex.
    */
   public List<T> getChildren(T vertex) {
-    List<T> childrenList = new ArrayList<>();
+
     List<T> x = new ArrayList<T>();
 
     for (Edge<T> edge : edges) {

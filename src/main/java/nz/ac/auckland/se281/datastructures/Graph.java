@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * A graph that is composed of a set of verticies and edges.
@@ -368,7 +365,7 @@ public class Graph<T extends Comparable<T>> {
 
   public List<T> recursiveBreadthFirstSearch() {
     List<T> visited = new ArrayList<>();
-    Queue<T> queue = new LinkedList<>();
+    Queue<T> queue = new Queue<T>();
     Set<T> roots = getRoots();
     int rootAmount = getRoots().size();
 

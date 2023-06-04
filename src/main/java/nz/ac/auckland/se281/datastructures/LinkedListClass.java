@@ -16,19 +16,13 @@ public class LinkedListClass<T> implements ListInterface<T> {
    *
    * @param data: the value of the Node
    */
-  public void prepend(T data) {
-    Node<T> newNode = new Node<>(data);
-    newNode.setNext(head);
-    head = newNode;
-    size++;
-  }
 
   /**
    * This method adds a node with specified data as the end node of the list
    *
    * @param data: the value of the Node
    */
-  public void append(T data) {
+  public void push(T data) {
     Node<T> newNode = new Node<>(data);
     if (head == null) {
       head = newNode;
@@ -72,9 +66,9 @@ public class LinkedListClass<T> implements ListInterface<T> {
       throw new IndexOutOfBoundsException("Invalid position");
     }
     if (pos == 0) {
-      prepend(data);
+      addFirst(data);
     } else if (pos == size) {
-      append(data);
+      push(data);
     } else {
       Node<T> newNode = new Node<>(data);
       Node<T> current = head;
@@ -118,6 +112,121 @@ public class LinkedListClass<T> implements ListInterface<T> {
     return size;
   }
 
+  /**
+   * This method checks if the list is empty
+   *
+   * @return true if the list is empty, false otherwise
+   */
+  public boolean isEmpty() {
+    return size == 0;
+  }
+
+  /**
+   * This method retrieves and removes the first element from the list
+   *
+   * @return the first element in the list
+   * @throws IllegalStateException if the list is empty
+   */
+  public T poll() {
+    if (isEmpty()) {
+      throw new IllegalStateException("List is empty");
+    }
+    T data = head.getValue();
+    head = head.getNext();
+    size--;
+    return data;
+  }
+
+  /**
+   * This method adds an element to the end of the list
+   *
+   * @param data the element to be added
+   */
+  public void add(T data) {
+    push(data);
+  }
+
+  /**
+   * This method checks if the list contains the specified element
+   *
+   * @param element the element to be checked
+   * @return true if the element is found in the list, false otherwise
+   */
+  public boolean contains(T element) {
+    Node<T> current = head;
+    while (current != null) {
+      if (current.getValue().equals(element)) {
+        return true;
+      }
+      current = current.getNext();
+    }
+    return false;
+  }
+
+  /**
+   * This method retrieves and removes the last element from the list
+   *
+   * @return the last element in the list
+   * @throws IllegalStateException if the list is empty
+   */
+  public T pop() {
+    if (isEmpty()) {
+      throw new IllegalStateException("List is empty");
+    }
+    if (size == 1) {
+      T data = head.getValue();
+      head = null;
+      size = 0;
+      return data;
+    }
+    Node<T> current = head;
+    while (current.getNext().getNext() != null) {
+      current = current.getNext();
+    }
+    T data = current.getNext().getValue();
+    current.setNext(null);
+    size--;
+    return data;
+  }
+
+  /**
+   * This method adds an element to the start of the list
+   *
+   * @param data the element to be added
+   */
+  public void addFirst(T data) {
+    Node<T> newNode = new Node<>(data);
+    newNode.setNext(head);
+    head = newNode;
+    size++;
+  }
+
+  /**
+   * This method removes the first element from the list
+   *
+   * @return the removed element
+   * @throws IllegalStateException if the list is empty
+   */
+  public T removeFirst() {
+    if (isEmpty()) {
+      throw new IllegalStateException("List is empty");
+    }
+    T data = head.getValue();
+    head = head.getNext();
+    size--;
+    return data;
+  }
+
+  /**
+   * This method retrieves and removes the first element from the list
+   *
+   * @return the first element in the list
+   * @throws IllegalStateException if the list is empty
+   */
+  public T pollFirst() {
+    return removeFirst();
+  }
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -127,5 +236,25 @@ public class LinkedListClass<T> implements ListInterface<T> {
       current = current.getNext();
     }
     return sb.toString().trim();
+  }
+
+  @Override
+  public void append(T item) {
+    push(item);
+  }
+
+  @Override
+  public void prepend(T item) {
+    Node<T> newNode = new Node<>(item);
+    if (head == null) {
+      head = newNode;
+    } else {
+      Node<T> current = head;
+      while (current.getNext() != null) {
+        current = current.getNext();
+      }
+      current.setNext(newNode);
+    }
+    size++;
   }
 }

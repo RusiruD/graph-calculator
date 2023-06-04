@@ -63,7 +63,6 @@ public class Graph<T extends Comparable<T>> {
     System.out.println(x);
 
     for (T verticie : x) {
-      // System.out.println(verticie);
 
       int inDegree = getInDegree(verticie);
 

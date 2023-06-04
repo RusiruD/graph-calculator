@@ -58,14 +58,20 @@ public class LinkedListClass<T> implements ListInterface<T> {
    * @throws IndexOutOfBoundsException if the position is invalid.
    */
   public void insert(int pos, T data) {
+    // if the position is invalid a exception is thrown
     if (pos < 0 || pos > size) {
       throw new IndexOutOfBoundsException("Invalid position");
     }
+    // if the position is 0 the node is added to the start of the list
     if (pos == 0) {
       addFirst(data);
-    } else if (pos == size) {
+    }
+    // if the position is the size of the list the node is added to the end of the list
+    else if (pos == size) {
       push(data);
-    } else {
+    }
+    // otherwise the node is added to the specified position
+    else {
       Node<T> newNode = new Node<>(data);
       Node<T> current = head;
       for (int i = 0; i < pos - 1; i++) {

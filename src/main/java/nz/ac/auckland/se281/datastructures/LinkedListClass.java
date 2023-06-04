@@ -28,7 +28,10 @@ public class LinkedListClass<T> implements ListInterface<T> {
     // Set the next node of the new node to be the current head
     if (head == null) {
       head = newNode;
-    } else {
+    }
+    // Set the head to be the new node
+
+    else {
       Node<T> current = head;
       while (current.getNext() != null) {
         current = current.getNext();
@@ -81,12 +84,16 @@ public class LinkedListClass<T> implements ListInterface<T> {
    * @throws IndexOutOfBoundsException if the position is invalid.
    */
   public void remove(int pos) {
+    // if the position is invalid a exception is thrown
     if (pos < 0 || pos >= size) {
       throw new IndexOutOfBoundsException("Invalid position");
     }
+    // if the position is 0 the head is set to the next element
     if (pos == 0) {
       head = head.getNext();
-    } else {
+    }
+    // otherwise the next element of the previous element is set to the next element
+    else {
       Node<T> current = head;
       for (int i = 0; i < pos - 1; i++) {
         current = current.getNext();

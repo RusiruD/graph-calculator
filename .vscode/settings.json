@@ -5,4 +5,5 @@
     },
     "java.configuration.updateBuildConfiguration": "interactive",
     "java.format.settings.google.executable": "",
+    "java.debug.settings.onBuildFailureProceed": true,
 }

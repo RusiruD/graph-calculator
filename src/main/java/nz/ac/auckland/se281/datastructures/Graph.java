@@ -274,15 +274,33 @@ public class Graph<T extends Comparable<T>> {
   }
 
   public List<T> returnSiblings(T vertex, List<T> visited) {
-    ArrayList<T> siblings = new ArrayList<T>();
-    for (Edge<T> edge : edges) {
-      if (edge.returnSource().equals(vertex) && !visited.contains(edge.returnDestination())) {
 
-        siblings.add(edge.returnDestination());
+    List<T> siblings = new ArrayList<>();
+
+    // Find the source vertex of the input vertex
+    List<T> sourceVertices = new ArrayList<>();
+    T sourceVertex = null;
+    // Find the source vertices of the input vertex
+    for (Edge<T> edge : edges) {
+      if (edge.returnDestination().equals(vertex)) {
+        sourceVertices.add(edge.returnSource());
       }
     }
-    // Collections.sort(siblings);
-    siblings.sort(Comparator.comparingInt(z -> Integer.parseInt(z.toString())));
+    // sourceVertices.sort(Comparator.comparingInt(z -> Integer.parseInt(z.toString())));
+    if (!sourceVertices.isEmpty()) {
+
+      sourceVertex = sourceVertices.get(0);
+    }
+
+    // Find the vertices that have an edge from the source vertex
+    if (sourceVertex != null) {
+      for (Edge<T> edge : edges) {
+        if (edge.returnSource().equals(sourceVertex) && edge.returnDestination() != vertex) {
+          siblings.add(edge.returnDestination());
+        }
+      }
+    }
+    // siblings.sort(Comparator.comparingInt(z -> Integer.parseInt(z.toString())));
     return siblings;
   }
 
@@ -292,21 +310,38 @@ public class Graph<T extends Comparable<T>> {
     }
 
     T vertex = queue.poll();
+    visited.add(vertex);
 
-    if (!visited.contains(vertex)) {
-      visited.add(vertex);
-
-      List<T> neighbors = new ArrayList<>();
-
-      neighbors.addAll(returnSiblings(vertex, visited));
-
-      queue.addAll(neighbors);
-
-      rbfs(queue, visited);
-      // return visited;
-    }
+    List<T> siblings = returnSiblings(vertex, visited);
     System.out.println(visited);
-    return visited;
+    System.out.println(vertex + " " + siblings);
+    if (siblings.isEmpty()) {
+      for (T visitedVertex : visited) {
+        List<T> children = getChildren(visitedVertex);
+        for (T child : children) {
+          if (!visited.contains(child) && !queue.contains(child)) {
+            queue.add(child);
+          }
+        }
+      }
+    } else if (visited.containsAll(siblings)) {
+      for (T visitedVertex : visited) {
+        List<T> children = getChildren(visitedVertex);
+        for (T child : children) {
+          if (!visited.contains(child) && !queue.contains(child)) {
+            queue.add(child);
+          }
+        }
+      }
+    } else {
+      for (T sibling : siblings) {
+        if (!visited.contains(sibling) && !queue.contains(sibling)) {
+          queue.add(sibling);
+        }
+      }
+    }
+
+    return rbfs(queue, visited);
   }
 
   public List<T> recursiveBreadthFirstSearch() {

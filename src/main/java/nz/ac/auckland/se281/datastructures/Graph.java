@@ -1,7 +1,6 @@
 package nz.ac.auckland.se281.datastructures;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -260,7 +259,17 @@ public class Graph<T extends Comparable<T>> {
         visited.add(topStackValue);
 
         List<T> childrenList = getChildren(topStackValue);
-        Collections.reverse(childrenList);
+        int left = 0;
+        int right = childrenList.size() - 1;
+
+        while (left < right) {
+          T temp = childrenList.get(left);
+          childrenList.set(left, childrenList.get(right));
+          childrenList.set(right, temp);
+
+          left++;
+          right--;
+        }
 
         for (T child : childrenList) {
           if (!visited.contains(child) && !stack.contains(child)) {
@@ -281,26 +290,38 @@ public class Graph<T extends Comparable<T>> {
     List<T> sourceVertices = new ArrayList<>();
     T sourceVertex = null;
     // Find the source vertices of the input vertex
+
     for (Edge<T> edge : edges) {
       if (edge.returnDestination().equals(vertex)) {
         sourceVertices.add(edge.returnSource());
       }
     }
-    // sourceVertices.sort(Comparator.comparingInt(z -> Integer.parseInt(z.toString())));
+
     if (!sourceVertices.isEmpty()) {
 
       sourceVertex = sourceVertices.get(0);
     }
 
-    // Find the vertices that have an edge from the source vertex
+    // Find the vertices that have an edge from the source
+    List<Edge<T>> sortedEdges = new ArrayList<>(edges);
+
+    Comparator<Edge<T>> edgeComparator =
+        Comparator.comparing((Edge<T> edge) -> edge.returnSource())
+            .thenComparing((Edge<T> edge) -> edge.returnDestination());
+    Comparator<Edge<T>> oppositeEdgeComparator = edgeComparator.reversed();
+    sortedEdges.sort(oppositeEdgeComparator);
     if (sourceVertex != null) {
-      for (Edge<T> edge : edges) {
-        if (edge.returnSource().equals(sourceVertex) && edge.returnDestination() != vertex) {
+      for (Edge<T> edge : sortedEdges) {
+        //  System.out.println(edge.returnSource() + " " + edge.returnDestination());
+        if (edge.returnSource().equals(sourceVertex)
+            && edge.returnDestination() != vertex
+            && !siblings.contains(edge.returnDestination())) {
+          // System.out.println("source vertex" + sourceVertex);
           siblings.add(edge.returnDestination());
         }
       }
     }
-    // siblings.sort(Comparator.comparingInt(z -> Integer.parseInt(z.toString())));
+
     return siblings;
   }
 
@@ -313,8 +334,9 @@ public class Graph<T extends Comparable<T>> {
     visited.add(vertex);
 
     List<T> siblings = returnSiblings(vertex, visited);
-    System.out.println(visited);
-    System.out.println(vertex + " " + siblings);
+
+    // System.out.println(visited);
+    // System.out.println(vertex + " " + siblings);
     if (siblings.isEmpty()) {
       for (T visitedVertex : visited) {
         List<T> children = getChildren(visitedVertex);

@@ -204,15 +204,17 @@ public class Graph<T extends Comparable<T>> {
 
   public List<T> getChildren(T vertex) {
     List<T> childrenList = new ArrayList<>();
+    List<T> x = new ArrayList<T>();
+
     for (Edge<T> edge : edges) {
       if (edge.returnSource().equals(vertex) && !edge.returnDestination().equals(vertex)) {
 
-        childrenList.add(edge.returnDestination());
+        x.add(edge.returnDestination());
       }
     }
-    Collections.sort(childrenList, (a, b) -> a.compareTo(b));
+    x.sort(Comparator.comparingInt(z -> Integer.parseInt(z.toString())));
 
-    return childrenList;
+    return x;
   }
 
   public List<T> iterativeBreadthFirstSearch() {
@@ -272,14 +274,15 @@ public class Graph<T extends Comparable<T>> {
   }
 
   public List<T> returnSiblings(T vertex, List<T> visited) {
-    ArrayList siblings = new ArrayList<>();
+    ArrayList<T> siblings = new ArrayList<T>();
     for (Edge<T> edge : edges) {
       if (edge.returnSource().equals(vertex) && !visited.contains(edge.returnDestination())) {
 
         siblings.add(edge.returnDestination());
       }
     }
-    Collections.sort(siblings);
+    // Collections.sort(siblings);
+    siblings.sort(Comparator.comparingInt(z -> Integer.parseInt(z.toString())));
     return siblings;
   }
 
@@ -300,8 +303,9 @@ public class Graph<T extends Comparable<T>> {
       queue.addAll(neighbors);
 
       rbfs(queue, visited);
-      return visited;
+      // return visited;
     }
+    System.out.println(visited);
     return visited;
   }
 

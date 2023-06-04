@@ -36,15 +36,15 @@ public class Graph<T extends Comparable<T>> {
    * @return The in-degree of the given vertex.
    */
   public int getInDegree(T vertex) {
-    int InDegree = 0;
+    int inDegree = 0;
 
     // calculates indegree by counting the number of edges that have the vertex as the destination
     for (Edge<T> edge : edges) {
       if (edge.returnDestination().equals(vertex)) {
-        InDegree++;
+        inDegree++;
       }
     }
-    return InDegree;
+    return inDegree;
   }
 
   /**
@@ -56,11 +56,10 @@ public class Graph<T extends Comparable<T>> {
 
     int counter = 0;
     Set<T> initialEquivalenceClassSet = new HashSet<>();
-    Set<T> rootsSet = new HashSet<>();
+
     List<T> x = new ArrayList<T>(verticies);
     Set<T> orderedSet = new LinkedHashSet<>();
-    // x.sort((a, b) -> a.compareTo(b));
-    // Collections.sort(x, (a, b) -> a.compareTo(b));
+
     x.sort(Comparator.comparingInt(vertex -> Integer.parseInt(vertex.toString())));
     System.out.println(x);
 
@@ -163,7 +162,6 @@ public class Graph<T extends Comparable<T>> {
             if (edge.returnSource().equals(edge3.returnSource())
                 && edge1.returnDestination().equals(edge3.returnDestination())) {
               transitiveEdgeCounter++;
-            } else {
             }
           }
         }
@@ -197,8 +195,6 @@ public class Graph<T extends Comparable<T>> {
 
           if (!edge.returnDestination().equals(edge1.returnSource())
               && edge.returnSource().equals(edge1.returnDestination())) {}
-
-        } else {
         }
       }
     }

@@ -56,13 +56,15 @@ public class Graph<T extends Comparable<T>> {
 
     int counter = 0;
 
-    List<T> x = new ArrayList<T>(verticies);
-    Set<T> orderedSet = new LinkedHashSet<>();
+    List<T> verticiesList = new ArrayList<T>(verticies);
 
-    x.sort(Comparator.comparingInt(vertex -> Integer.parseInt(vertex.toString())));
-    System.out.println(x);
+    Set<T> rootsSet = new LinkedHashSet<>();
 
-    for (T verticie : x) {
+    // sorts the verticies in the array list in  ascending order
+    verticiesList.sort(Comparator.comparingInt(vertex -> Integer.parseInt(vertex.toString())));
+
+    // checks if there are any verticies with an indegree of 0 and adds them to the roots set
+    for (T verticie : verticiesList) {
 
       int inDegree = getInDegree(verticie);
 
@@ -70,30 +72,37 @@ public class Graph<T extends Comparable<T>> {
 
         counter++;
 
-        orderedSet.add(verticie);
+        rootsSet.add(verticie);
       }
     }
 
+    // if there are no verticies with an indegree of 0, then the roots are found from the
+    // equivalence classes
     if (counter == 0) {
 
+      // if the equivalence class is not empty, then the first value of the equivalence class is
+      // added to the roots set
       Set<T> initialEquivalenceClassSet = getEquivalenceClass(verticies.iterator().next());
       if (!initialEquivalenceClassSet.isEmpty()) {
         T firstValueT = initialEquivalenceClassSet.iterator().next();
-        orderedSet.add(firstValueT);
+        rootsSet.add(firstValueT);
       }
 
+      // checks if the first value of the equivalence class of each vertex is the same as the first
+      // equivalence class
+      // if it is not, then the first value of the equivalence class is added to the roots set
       if (!initialEquivalenceClassSet.isEmpty()) {
         for (T verticie : verticies) {
           Set<T> equivalenceClassSet = getEquivalenceClass(verticie);
 
-          if (equivalenceClassSet.iterator().next() != orderedSet.iterator().next()) {
-            orderedSet.add(equivalenceClassSet.iterator().next());
+          if (equivalenceClassSet.iterator().next() != rootsSet.iterator().next()) {
+            rootsSet.add(equivalenceClassSet.iterator().next());
           }
         }
       }
     }
 
-    return orderedSet;
+    return rootsSet;
   }
 
   /**
@@ -103,11 +112,14 @@ public class Graph<T extends Comparable<T>> {
    */
   public boolean isReflexive() {
     int reflexiveEdgeCounter = 0;
+    // checks if the source and destination of each edge is the same and increments the counter if
+    // it is
     for (Edge<T> edge : edges) {
       if (edge.returnDestination().equals(edge.returnSource())) {
         reflexiveEdgeCounter++;
       }
     }
+    // if the counter is equal to the number of verticies, then the graph is reflexive
     if (reflexiveEdgeCounter == verticies.size()) {
       return true;
     } else {
@@ -123,6 +135,9 @@ public class Graph<T extends Comparable<T>> {
   public boolean isSymmetric() {
 
     int symmetricEdgeCounter = 0;
+    // checks if there is an edge with a  destination that is the same as the source of another edge
+    // and checkes if the source of the first edge is the same as the destination of the second edge
+    // increments the counter if both conditions are true
     for (Edge<T> edge : edges) {
 
       for (Edge<T> edge1 : edges) {
@@ -134,6 +149,7 @@ public class Graph<T extends Comparable<T>> {
       }
     }
 
+    // if the counter is equal to the number of edges, then the graph is symmetric
     if (symmetricEdgeCounter == edges.size()) {
       return true;
     } else {
@@ -149,13 +165,19 @@ public class Graph<T extends Comparable<T>> {
   public boolean isTransitive() {
     int possibleTransitiveEdgeCounter = 0;
     int transitiveEdgeCounter = 0;
+    // checks if there is an edge with a destination that is the same as the source of another
+    // edge-edge1
     for (Edge<T> edge : edges) {
+      // increments the counter if the destination of the first edge is the same as the source of
+      // the second edge
+      // and if the destination of the second edge is not the same as the source of the second edge
       for (Edge<T> edge1 : edges) {
 
         if (edge.returnDestination().equals(edge1.returnSource())
             && !edge1.returnDestination().equals(edge1.returnSource())) {
           possibleTransitiveEdgeCounter++;
-
+          // checks if there is an edge-edge3 that comes from the same source the first edge did
+          // and goes to the same destination the second edge did
           for (Edge<T> edge3 : edges) {
             if (edge.returnSource().equals(edge3.returnSource())
                 && edge1.returnDestination().equals(edge3.returnDestination())) {
@@ -165,6 +187,7 @@ public class Graph<T extends Comparable<T>> {
         }
       }
     }
+    // if the counter is equal to the number of edges, then the graph is transitive
     if (possibleTransitiveEdgeCounter == transitiveEdgeCounter) {
       return true;
     } else {
@@ -180,20 +203,24 @@ public class Graph<T extends Comparable<T>> {
   public boolean isAntiSymmetric() {
     int antisymmetricEdgeCounter = 0;
     int possibleAntiSymmetricEdgeCounter = 0;
+    // checks if there is an edge with a destination that is the same as the source of another
+    // edge-edge1
     for (Edge<T> edge : edges) {
 
       for (Edge<T> edge1 : edges) {
-
+        // increments the counter if the destination of the first edge is the same as the source of
+        // the second edge
         if (edge.returnDestination().equals(edge1.returnSource())
             && edge.returnSource().equals(edge1.returnDestination())) {
           possibleAntiSymmetricEdgeCounter++;
+          // increments different counter if the edges equal each other
           if (edge.equals(edge1)) {
             antisymmetricEdgeCounter++;
           }
         }
       }
     }
-
+    // if the counter is equal to the number of edges, then the graph is anti-symmetric
     if (possibleAntiSymmetricEdgeCounter == antisymmetricEdgeCounter) {
       return true;
     } else {
@@ -208,6 +235,8 @@ public class Graph<T extends Comparable<T>> {
    * @return true if the graph is an equivalence relation, false otherwise.
    */
   public boolean isEquivalence() {
+    // checks if the graph has an equivalence relation by checking if its reflexive, symmetric, and
+    // transitive
     if (isReflexive() && isSymmetric() && isTransitive()) {
       return true;
     } else {
@@ -223,9 +252,14 @@ public class Graph<T extends Comparable<T>> {
    */
   public Set<T> getEquivalenceClass(T vertex) {
     Set<T> equivalenceClass = new HashSet<>();
+    // checks if the graph is an equivalence relation if itisnt then it returns the empty set
     if (!isEquivalence()) {
       return equivalenceClass;
     } else {
+
+      // for every edge in the graph, if the source equals the vertex, then the destination is added
+      // to the equivalence class
+      // if the destination equals the vertex its source is added to the equivalence class
       for (Edge<T> edge : edges) {
         if (edge.returnSource().equals(vertex)) {
           equivalenceClass.add(edge.returnDestination());
@@ -245,17 +279,20 @@ public class Graph<T extends Comparable<T>> {
    */
   public List<T> getChildren(T vertex) {
 
-    List<T> x = new ArrayList<T>();
+    List<T> children = new ArrayList<T>();
 
+    // for every edge in the graph, if the source equals the vertex and the destination doesnt equal
+    // the vertex
+    // add the destination to the list of children
     for (Edge<T> edge : edges) {
       if (edge.returnSource().equals(vertex) && !edge.returnDestination().equals(vertex)) {
 
-        x.add(edge.returnDestination());
+        children.add(edge.returnDestination());
       }
     }
-    x.sort(Comparator.comparingInt(z -> Integer.parseInt(z.toString())));
+    children.sort(Comparator.comparingInt(z -> Integer.parseInt(z.toString())));
 
-    return x;
+    return children;
   }
 
   /**
@@ -268,16 +305,22 @@ public class Graph<T extends Comparable<T>> {
     List<T> visited = new ArrayList<>();
     List<T> queue = new ArrayList<>();
     Set<T> rootsSet = getRoots();
+
+    // for every root in the graph, add it to the queue and remove it from the set of roots
     for (int i = 0; i < getRoots().size(); i++) {
       queue.add(rootsSet.iterator().next());
       rootsSet.remove(rootsSet.iterator().next());
 
+      // while the queue is not empty, remove the first value from the queue and add it to the
+      // visited list
       while (!queue.isEmpty()) {
 
         T firstQueueValue = queue.remove(0);
 
         visited.add(firstQueueValue);
 
+        // for every child of the first value in the queue, if it hasnt been visited and isnt in the
+        // queue, add it to the queue
         List<T> childrenList = getChildren(firstQueueValue);
 
         for (T childNode : childrenList) {
@@ -302,9 +345,12 @@ public class Graph<T extends Comparable<T>> {
     Stack<T> stack = new Stack<>();
     Set<T> rootsSet = getRoots();
 
+    // for every root in the graph, add it to the stack and remove it from the set of roots
     for (int i = 0; i < getRoots().size(); i++) {
       stack.push(rootsSet.iterator().next());
       rootsSet.remove(rootsSet.iterator().next());
+      // while the stack is not empty, remove the top value from the stack and add it to the visited
+      // list
       while (!stack.isEmpty()) {
         T topStackValue = stack.pop();
         visited.add(topStackValue);
@@ -312,7 +358,7 @@ public class Graph<T extends Comparable<T>> {
         List<T> childrenList = getChildren(topStackValue);
         int left = 0;
         int right = childrenList.size() - 1;
-
+        // reverse the children list
         while (left < right) {
           T temp = childrenList.get(left);
           childrenList.set(left, childrenList.get(right));
@@ -322,6 +368,8 @@ public class Graph<T extends Comparable<T>> {
           right--;
         }
 
+        // for every child of the top value in the stack, if it hasnt been visited and isnt in the
+        // stack, add it to the stack
         for (T child : childrenList) {
           if (!visited.contains(child) && !stack.contains(child)) {
             stack.push(child);
@@ -361,12 +409,18 @@ public class Graph<T extends Comparable<T>> {
     // Find the vertices that have an edge from the source
     List<Edge<T>> sortedEdges = new ArrayList<>(edges);
 
+    // order the edges by source and then destination from lowest to highest
+    //  then reverse it so its highest to lowest
     Comparator<Edge<T>> edgeComparator =
         Comparator.comparing((Edge<T> edge) -> edge.returnSource())
             .thenComparing((Edge<T> edge) -> edge.returnDestination());
     Comparator<Edge<T>> oppositeEdgeComparator = edgeComparator.reversed();
     sortedEdges.sort(oppositeEdgeComparator);
 
+    // for every edge in the graph, if the source equals the
+    // source vertex and the destination doesnt equal the vertex
+    // and the siblings list doesnt already contain the destination
+    // add the destination to the list of siblings
     if (sourceVertex != null) {
       for (Edge<T> edge : sortedEdges) {
         if (edge.returnSource().equals(sourceVertex)
@@ -392,11 +446,13 @@ public class Graph<T extends Comparable<T>> {
       return visited;
     }
 
+    // Remove the first vertex from the queue
     T vertex = queue.poll();
     visited.add(vertex);
 
     List<T> siblings = returnSiblings(vertex, visited);
 
+    // If there are no siblings, add all the children of the visited vertices to the queue
     if (siblings.isEmpty()) {
       for (T visitedVertex : visited) {
         List<T> children = getChildren(visitedVertex);
@@ -406,7 +462,10 @@ public class Graph<T extends Comparable<T>> {
           }
         }
       }
-    } else if (visited.containsAll(siblings)) {
+    }
+    // If all the siblings have been visited, add all the children of the visited vertices to the
+    // queue
+    else if (visited.containsAll(siblings)) {
       for (T visitedVertex : visited) {
         List<T> children = getChildren(visitedVertex);
         for (T child : children) {
@@ -415,7 +474,9 @@ public class Graph<T extends Comparable<T>> {
           }
         }
       }
-    } else {
+    }
+    // Otherwise, add all the siblings to the queue
+    else {
       for (T sibling : siblings) {
         if (!visited.contains(sibling) && !queue.contains(sibling)) {
           queue.add(sibling);
@@ -437,6 +498,7 @@ public class Graph<T extends Comparable<T>> {
     Set<T> roots = getRoots();
     int rootAmount = getRoots().size();
 
+    // Add all the roots to the queue
     for (int i = 0; i < rootAmount; i++) {
       queue.add(roots.iterator().next());
       roots.remove(roots.iterator().next());
@@ -455,12 +517,15 @@ public class Graph<T extends Comparable<T>> {
    * @return The list of visited vertices during RDFS.
    */
   public List<T> rdfs(T vertex, List<T> visited) {
+    // If the vertex has no children, add it to the visited list
     if (getChildren(vertex).isEmpty()) {
       if (!visited.contains(vertex)) {
         visited.add(vertex);
       }
       return visited;
-    } else {
+    }
+    // Otherwise, add the vertex to the visited list and recursively call rdfs on its children
+    else {
       if (!visited.contains(vertex)) {
         visited.add(vertex);
 
@@ -480,9 +545,9 @@ public class Graph<T extends Comparable<T>> {
   public List<T> recursiveDepthFirstSearch() {
     Set<T> roots = getRoots();
     List<T> visited = new ArrayList<>();
-    int l = roots.size();
-
-    for (int i = 0; i < l; i++) {
+    int rootsAmount = roots.size();
+    // For every root, call rdfs on it
+    for (int i = 0; i < rootsAmount; i++) {
       visited = rdfs(roots.iterator().next(), visited);
       roots.remove(roots.iterator().next());
     }
